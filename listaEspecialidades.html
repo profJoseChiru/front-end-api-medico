@@ -12,7 +12,7 @@
 
         </div>
         <h1 class="text-center">Listado de Especialidades</h1>
-        <button class="btn btn-primary">Buscar</button>
+        <button class="btn btn-primary" onclick="listarEspecialidades()">Buscar</button>
         <table class="table mt-4" id="tabla">
             <thead>
                 <tr>
@@ -42,7 +42,33 @@
 </script>  
 <script>
     async function listarEspecialidades() {
-        const url="http://172.29.2.38:5154/api/Especialidades"
+        const url="http://172.29.2.38:5154/api/Especialidades";
+        try{
+            const response= await fetch(url);
+            if (!response.ok){
+                throw Error ('Error en la red '+ response.status);
+            }
+            const data = await response.json();
+            console.log(data);
+            const tabla=document.getElementById("tabla").getElementsByTagName("tbody")[0];
+            tabla.innerHTML='';
+            data.forEach(especialidad => {
+                const fila= document.createElement('tr');
+                let celdaId=document.createElement('td');
+                celdaId.textContent=especialidad.id;
+                fila.appendChild(celdaId);
+                let nombre=document.createElement('td');
+                nombre.textContent=especialidad.nombre;
+                fila.appendChild(nombre);
+                let descripcion=document.createElement('td');
+                descripcion.textContent=especialidad.descripcion;
+                fila.appendChild(descripcion);
+                tabla.appendChild(fila);
+            });
+        }catch(err){
+            console.error("Error en la comunición del Api",err);
+            
+        }
         
     }
 </script>
